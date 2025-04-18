@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
+    "dotenv": "^16.5.0",
+    "flowbite": "^3.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-multi-carousel": "^2.8.6",
     "react-router-dom": "^6.30.0",
     "react-toastify": "^11.0.5",
     "tailwindcss": "^4.1.4"
