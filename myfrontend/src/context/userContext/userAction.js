@@ -30,11 +30,7 @@ export const UserLogin = async (dispatch, email, password) => {
         },
         body: JSON.stringify({ username, email, password }),
       });
-  
-      if (response.status === 404) {
-        window.location = "/notfound";
-        return;
-      }
+
   
       const data = await response.json();
   
