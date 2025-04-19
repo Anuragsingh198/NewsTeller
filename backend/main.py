@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from core.database import Base, engine
-from routers import article, user, favourite
+from routers import article, user
 
 app = FastAPI()
 
