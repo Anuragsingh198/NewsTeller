@@ -6,4 +6,8 @@ DATABASE_URL = "postgresql://postgres:newpassword@localhost:5432/news"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8ea485269136fbb5e78652377b9ae1267320136c
 Base = declarative_base()
