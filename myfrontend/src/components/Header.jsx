@@ -1,7 +1,9 @@
-import React from "react";
+import {useState} from "react";
 import { Link } from "react-router-dom";
 
 function Header() {
+  const [isLogin, setIsLogin] = useState(true)
+
   return (
     <header className="bg-[#2E2E2E] border-b border-[#3A3A3A] py-4 px-20">
       <div className="container mx-auto flex items-center justify-between">
@@ -16,6 +18,12 @@ function Header() {
 
         {/* Right Side: Auth Buttons */}
         <div className="flex items-center space-x-4">
+      {  isLogin && <Link
+            to="/analytics"
+            className="text-[#FFFFFF] hover:text-[#B0B0B0] transition-colors"
+          >
+            Analysis
+          </Link>}
           <Link
             to="/login"
             className="text-[#FFFFFF] hover:text-[#B0B0B0] transition-colors"

@@ -7,7 +7,7 @@ export const ContextProvider = ({ children }) => {
         news: [],
     isLoading: false,
     isSuccess: false,
-    user: '',
+    user: null,
 
     };
     const [state, dispatch] = useReducer(contextReducer, initialState);  

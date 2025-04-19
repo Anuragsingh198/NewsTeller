@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Header from "./components/Header";
+import Analytics from "./pages/Analytics";
 
 function App() {
   
@@ -20,6 +21,9 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             <Route path="/register" element={<Register />} />
+
+            <Route path="/analytics" element={<Analytics />} />
+
             
 
             {/* <Route path="/new-ticket" element={<PrivateRoute />}>

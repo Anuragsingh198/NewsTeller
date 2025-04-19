@@ -1,4 +1,4 @@
-import React from 'react';
+import {useEffect, useContext} from 'react';
 import Header from '../components/Header';
 import gif from '../assets/NewsImage.gif';
 import Carousel from "react-multi-carousel";
@@ -7,6 +7,9 @@ import NewsCardComponent from '../components/NewsCardComponent';
 import Footer from '../components/Footer';
 
 function Home() {
+
+
+
   const responsive = {
     desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3, slidesToSlide: 3 },
     tablet: { breakpoint: { max: 1024, min: 464 }, items: 2, slidesToSlide: 2 },

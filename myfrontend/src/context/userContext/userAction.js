@@ -1,10 +1,10 @@
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const UserLogin = async (dispatch, email, password) => {
-    console.log('The base url is',BASE_URL)
+    console.log('The base url is',VITE_BASE_URL)
     try {
-      const response = await fetch(`${BASE_URL}/users/login`, {
+      const response = await fetch(`${VITE_BASE_URL}/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,8 +22,11 @@ export const UserLogin = async (dispatch, email, password) => {
   };
 
   export const RegisterUser = async (dispatch, username, email, password) => {
+    console.log('The base url is', VITE_BASE_URL)
+
+
     try {
-      const response = await fetch(`${BASE_URL}/users/signup`, {
+      const response = await fetch(`${VITE_BASE_URL}/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
