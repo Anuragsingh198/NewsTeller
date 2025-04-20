@@ -1,14 +1,14 @@
-import {useEffect, useContext} from 'react';
+import { useEffect, useContext, useState } from 'react';
 import Header from '../components/Header';
 import gif from '../assets/NewsImage.gif';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import NewsCardComponent from '../components/NewsCardComponent';
+import NewsCardComponent from '../components/NewsCardComponent'; // Import the NewsCardComponent
 import Footer from '../components/Footer';
+import context from '../context/contextProvider';
 
 function Home() {
-
-
+  const { topnews, dispatch  } = useContext(context);
 
   const responsive = {
     desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3, slidesToSlide: 3 },
@@ -16,28 +16,19 @@ function Home() {
     mobile: { breakpoint: { max: 464, min: 0 }, items: 1, slidesToSlide: 1 }
   };
 
-  const carouselItems = [
-    {
-      title: "Wildlife",
-      img: "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      title: "World News",
-      img: "https://plus.unsplash.com/premium_photo-1691223733678-095fee90a0a7?q=80&w=2121&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      title: "Sports",
-      img: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      title: "Entertainment",
-      img: "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      title: "Health",
-      img: "https://plus.unsplash.com/premium_photo-1673953509975-576678fa6710?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
+  const topNews = [
+    { title: "Breaking News 1", img: "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?q=80&w=2070&auto=format&fit=crop", category: "World", url: "https://news.example.com/article-1" },
+    { title: "Breaking News 2", img: "https://plus.unsplash.com/premium_photo-1691223733678-095fee90a0a7?q=80&w=2121&auto=format&fit=crop", category: "Sports", url: "https://news.example.com/article-2" },
+    { title: "Breaking News 3", img: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070&auto=format&fit=crop", category: "Health", url: "https://news.example.com/article-3" },
+    { title: "Breaking News 4", img: "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?q=80&w=1972&auto=format&fit=crop", category: "Entertainment", url: "https://news.example.com/article-4" },
+    { title: "Breaking News 5", img: "https://plus.unsplash.com/premium_photo-1673953509975-576678fa6710?q=80&w=2070&auto=format&fit=crop", category: "Technology", url: "https://news.example.com/article-5" },
   ];
+
+  // On mount, set top news
+  // useEffect(() => {
+  //   setNews(topNews);
+  //   setFilteredNews(topNews); // Initialize with all top news
+  // }, [setNews, setFilteredNews]);
 
   return (
     <div className="bg-[#242424] text-[#F0F0F0] min-h-screen">
@@ -66,10 +57,10 @@ function Home() {
         </div>
       </div>
 
-      {/* Carousel Section */}
+      {/* Top News Carousel */}
       <div className="mt-20 px-6 md:px-20">
         <h2 className="text-3xl font-semibold mb-8 text-center text-white">
-          Explore News Categories
+          Top News
         </h2>
         <Carousel className='mb-10'
           swipeable={true}
@@ -88,7 +79,7 @@ function Home() {
           dotListClass="custom-dot-list-style"
           itemClass="px-4"
         >
-          {carouselItems.map((item, index) => (
+          {topNews.map((item, index) => (
             <div key={index} className="bg-[#2f2f2f] rounded-2xl overflow-hidden shadow-lg">
               <img
                 src={item.img}
@@ -97,17 +88,28 @@ function Home() {
               />
               <div className="p-4">
                 <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                {/* Read More Button */}
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#3B82F6] mt-4 inline-block"
+                >
+                  Read More
+                </a>
               </div>
             </div>
           ))}
         </Carousel>
       </div>
+
+      {/* News Card Component Section */}
       <div className='flex justify-center items-center mb-10'>
-        <NewsCardComponent/>
+        <NewsCardComponent /> {/* This renders the NewsCardComponent */}
       </div>
-      <div>
-        <Footer/>
-      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

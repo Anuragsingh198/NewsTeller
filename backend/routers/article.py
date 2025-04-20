@@ -6,7 +6,7 @@ from core.database import SessionLocal
 from typing import List
 from services.newsapi import fetch_news_articles
 from sqlalchemy.exc import SQLAlchemyError
-
+# from apscheduler.schedulers.background import BackgroundScheduler
 router = APIRouter(prefix="/articles", tags=["Articles"])
 
 import logging
@@ -22,18 +22,15 @@ def get_db():
 @router.get("/fetch")
 def fetch_and_store_articles(db: Session = Depends(get_db)):
     try:
-        articles = fetch_news_articles()
-        for art in articles:
-            if not db.query(models.Article).filter_by(article_id=art["article_id"]).first():
-                db_article = models.Article(**art)
-                db.add(db_article)
-        db.commit()
-        return {"message": "Articles stored successfully"}
+        articles = db.query(models.Article).all()
+        if not articles:
+            raise  HTTPException(status_code=402, detail="no data found")
+        return articles
 
-    except SQLAlchemyError as db_error:
-        db.rollback()
-        print("Database error:", db_error)
-        raise HTTPException(status_code=500, detail="Database operation failed")
+    # except SQLAlchemyError as db_error:
+    #     db.rollback()
+    #     print("Database error:", db_error)
+    #     raise HTTPException(status_code=500, detail="Database operation failed")
 
     except Exception as e:
         print("General error:", e)
@@ -50,14 +47,14 @@ def get_news_data(  pageNo:int ,  db:Session= Depends(get_db)):
         raise HTTPException (status_code=404 , detail="articels not found")
     return  articles
 
-@router.get("/fetch/all", response_model=List[schemas.ArticleOut])
-def get_news_data(db: Session = Depends(get_db)):
-    logger.info("🚀 /topnews endpoint hit")
-    articles = db.query(models.Article).all()
-    logger.info(f"🔍 Retrieved articles: {articles}")
-    if not articles:
-        raise HTTPException(status_code=404, detail="Articles not found")  
-    return articles
+# @router.get("/fetch/all", response_model=List[schemas.ArticleOut])
+# def get_news_data(db: Session = Depends(get_db)):
+#     logger.info("🚀 /topnews endpoint hit")
+#     articles = db.query(models.Article).all()
+#     logger.info(f"🔍 Retrieved articles: {articles}")
+#     if not articles:
+#         raise HTTPException(status_code=404, detail="Articles not found")  
+#     return articles
 
 @router.get("/topnews", response_model=List[schemas.ArticleOut])
 def get_top_news(db: Session = Depends(get_db)):

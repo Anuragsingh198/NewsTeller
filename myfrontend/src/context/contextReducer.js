@@ -13,16 +13,21 @@ const contextReducer = (state, action) => {
                 topNews: action.payload,
                 loading: false
             }
-        case 'SET_LOADING':
-            return{
-                ...state,
-                loading: true
-            }
-        case 'CLEAR_USER':
-            return{
-                ...state,
-                users: []
-            }
+            case "SET_LOADING":
+                return { ...state, isLoading: action.payload };              
+        // case 'CLEAR_USER':
+        //     return{
+        //         ...state,
+        //         users: []
+        //     }
+        case 'LOGIN':
+            localStorage.setItem('user', JSON.stringify(action.payload));
+            return { ...state, user: action.payload };
+          
+          case 'LOGOUT':
+            localStorage.removeItem('user');
+            return { ...state, user: null };
+          
         default:
             return state
     }

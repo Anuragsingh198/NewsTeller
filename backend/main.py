@@ -1,30 +1,54 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  # ← import this
-from core.database import Base, engine
-from routers import article, user
+from fastapi.middleware.cors import CORSMiddleware  
+from core.database import Base, engine, SessionLocal
+from routers import article, user, favourite
+from apscheduler.schedulers.background import BackgroundScheduler
+from sqlalchemy.orm import Session
+from services.newsapi import fetch_news_articles 
+from models.article import Article  
+from datetime import datetime, timedelta
+
 
 app = FastAPI()
 
-# CORS configuration
+# CORS setup
 origins = [
-    "http://localhost:5173",  # Frontend dev server (React/Vite/etc.)
-    "http://127.0.0.1:3000",  # Another common localhost variation
-    # Add any other origins you want to allow:
-    # "https://yourfrontenddomain.com"
+    "http://localhost:5173",
+    "http://127.0.0.1:3000", 
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,            # Origins allowed to access the backend
+    allow_origins=origins,          
     allow_credentials=True,
-    allow_methods=["*"],              # Allow all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],              # Allow all headers
+    allow_methods=["*"],              
+    allow_headers=["*"],            
 )
-
-# Database
 Base.metadata.create_all(bind=engine)
+def fetch_and_store_articles_scheduled():
+    db: Session = SessionLocal()
+    try:
+        articles = fetch_news_articles()
+        for art in articles:
+            if not db.query(Article).filter_by(article_id=art["article_id"]).first():
+                db_article = Article(**art)
+                db.add(db_article)
+        db.commit()
+        print("Scheduled fetch: Articles stored successfully.")
+    except Exception as e:
+        print("Scheduled fetch error:", e)
+    finally:
+        db.close()
 
-# Routers
+scheduler = BackgroundScheduler()
+scheduler.add_job(
+    fetch_and_store_articles_scheduled,
+    "interval",
+    hours=24,
+    next_run_time=datetime.now() + timedelta(hours=24)  
+)
+scheduler.start()
+
 app.include_router(article.router)
 app.include_router(user.router)
 # app.include_router(favourite.router)
