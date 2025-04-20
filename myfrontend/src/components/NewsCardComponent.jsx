@@ -1,6 +1,7 @@
 import {useState, useContext, useEffect} from "react";
 import context from "../context/contextProvider";
 import { fetchNews } from "../context/contextAction";
+import fallback from "../assets/fallback.png"
 
 // Card Component (unchanged)
 function NewsCardComponent({ news }) {
@@ -11,6 +12,11 @@ function NewsCardComponent({ news }) {
           className="rounded-t-lg h-40 w-full object-cover"
           src={news.image_url}
           alt="News Thumbnail"
+          onError={(e) => {
+            console.log('image default')
+            e.target.onerror = null;
+            e.target.src = fallback;
+          }}
         />
       </a>
       <div className="p-4 h-[250px] overflow-hidden">
@@ -59,7 +65,7 @@ function NewsCardComponent({ news }) {
 }
 
 function NewsCardList() {
-  const { news, dispatch } = useContext(context); 
+  const { dispatch } = useContext(context); 
   const [page, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [categories, setCategories] = useState([]);

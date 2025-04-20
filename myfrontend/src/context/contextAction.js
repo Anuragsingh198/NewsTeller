@@ -19,37 +19,46 @@ export const fetchNews = async (dispatch, pgNo) => {
     return articles;
   } catch (error) {
     console.error('Fetch news error:', error);
+    return error.message || error;
   }
 };
 
-export const SearchUsers = async (text) => {
+export const fetchTopNews = async (dispatch) => {
+  try{
+    const response = await fetch(`${VITE_BASE_URL}/articles/topnews`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const  articles  = await response.json();
     
-    const params = new URLSearchParams({
-      q: text,
-    });
-    const response = await fetch(`${VITE_BASE_URL}/search/users?${params}`);
-    const { items } = await response.json();
-    return items
-  };
+      // console.log('Top news array: ', articles)
+    dispatch({ type: 'GET_TOP_NEWS', payload: articles });
 
-  export const getUser = async (login) => {
-    const response = await fetch(`${VITE_BASE_URL}/users/${login}`);
+    return articles;
+  } catch(error){
+    console.error('Fetch top news error:', error);
+    return error.message || error;
+  }
+}
 
-    if (response.status === 404) {
-      window.location = "/notfound";
-    } else {
-      const data = await response.json();
-      console.log('User data', data)
-      return data;
-    }
-  };
+export const fetchAllNews = async (dispatch) => {
+  try{
+    const response = await fetch(`${VITE_BASE_URL}/articles/fetch`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const  articles  = await response.json();
+    
+      // console.log('Top news array: ', articles)
+    dispatch({ type: 'GET_ALL_NEWS', payload: articles });
 
-  export const getUserRepo = async (login) => {
-    const params = new URLSearchParams({
-      sort: 'created',
-      per_page: 5
-    });
-    const response = await fetch(`${VITE_BASE_URL}/users/${login}/repos?${params}`);
-    const data = await response.json();
-    return data;
-  };
+    return articles;
+  } catch(error){
+    console.error('Fetch top news error:', error);
+    return error.message || error;
+  }
+}
