@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import context from "../context/contextProvider";
 
@@ -6,6 +6,10 @@ import context from "../context/contextProvider";
 function Header() {
   const { user, dispatch } = useContext(context); 
   const navigate = useNavigate();
+
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  console.log('soooo we are getting user from local storage without context: ', storedUser)
+
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
@@ -29,7 +33,7 @@ function Header() {
             Analysis
           </Link>
 
-          {!user ? (
+          {!storedUser ? (
             <>
               <Link
                 to="/login"

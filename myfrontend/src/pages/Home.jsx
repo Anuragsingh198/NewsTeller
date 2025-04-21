@@ -6,9 +6,24 @@ import "react-multi-carousel/lib/styles.css";
 import NewsCardComponent from '../components/NewsCardComponent'; // Import the NewsCardComponent
 import Footer from '../components/Footer';
 import context from '../context/contextProvider';
+import { fetchTopNews } from '../context/contextAction';
+import fallback from "../assets/fallback.png"
+
 
 function Home() {
-  const { topnews, dispatch  } = useContext(context);
+  const { topnews, dispatch } = useContext(context);
+  const [topNewsVar, setTopNewsVar] = useState([])
+  useEffect(() => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    fetchTopNews(dispatch)
+      .then((data) => {
+        setTopNewsVar(data)
+      })
+      .finally(() => {
+        dispatch({ type: "SET_LOADING", payload: false })
+      })
+  }, [dispatch, topnews])
+
 
   const responsive = {
     desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3, slidesToSlide: 3 },
@@ -42,7 +57,7 @@ function Home() {
             Welcome to <span className="text-[#3B82F6]">NEWSteller</span>
           </h1>
           <p className="text-[#B0B0B0] text-lg leading-relaxed">
-            Your daily dose of curated news, delivered with simplicity and style. 
+            Your daily dose of curated news, delivered with simplicity and style.
             Stay informed with personalized updates and a sleek interface.
           </p>
         </div>
@@ -62,45 +77,55 @@ function Home() {
         <h2 className="text-3xl font-semibold mb-8 text-center text-white">
           Top News
         </h2>
-        <Carousel className='mb-10'
-          swipeable={true}
-          draggable={true}
-          showDots={true}
-          responsive={responsive}
-          ssr={true}
-          infinite={true}
-          autoPlay={true}
-          autoPlaySpeed={2500}
-          keyBoardControl={true}
-          customTransition="all 0.5s"
-          transitionDuration={500}
-          containerClass="carousel-container"
-          removeArrowOnDeviceType={["tablet", "mobile"]}
-          dotListClass="custom-dot-list-style"
-          itemClass="px-4"
-        >
-          {topNews.map((item, index) => (
-            <div key={index} className="bg-[#2f2f2f] rounded-2xl overflow-hidden shadow-lg">
-              <img
-                src={item.img}
-                alt={item.title}
-                className="h-48 w-full object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                {/* Read More Button */}
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#3B82F6] mt-4 inline-block"
-                >
-                  Read More
-                </a>
+        {topNewsVar && topNewsVar.length > 0 ? (
+          <Carousel
+            className='mb-10'
+            swipeable={true}
+            draggable={true}
+            showDots={true}
+            responsive={responsive}
+            ssr={true}
+            infinite={true}
+            autoPlay={true}
+            autoPlaySpeed={2500}
+            keyBoardControl={true}
+            customTransition="all 0.5s"
+            transitionDuration={500}
+            containerClass="carousel-container"
+            removeArrowOnDeviceType={["tablet", "mobile"]}
+            dotListClass="custom-dot-list-style"
+            itemClass="px-4"
+          >
+            {topNewsVar.map((item, index) => (
+              <div key={index} className="bg-[#2f2f2f] rounded-2xl overflow-hidden shadow-lg">
+                <img
+                  src={item.image_url}
+                  alt={item.title}
+                  className="h-48 w-full object-cover"
+                  onError={(e) => {
+                    console.log('image default')
+                    e.target.onerror = null;
+                    e.target.src = fallback;
+                  }}
+                />
+                <div className="p-4 h-25">
+                  <h3 className="text-sm font-bold text-white truncate">{item.title}</h3>
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#3B82F6] mt-4 inline-block"
+                  >
+                    Read More
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
-        </Carousel>
+            ))}
+          </Carousel>
+        ) : (
+          <div className="text-center text-white py-10">Loading...</div>
+        )}
+
       </div>
 
       {/* News Card Component Section */}
